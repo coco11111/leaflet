@@ -1,0 +1,42 @@
+---
+title: "Leaflet project"
+author: "Xue Zhang"
+date: "2019/7/17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Requirements
+
+Create a web page using R Markdown that features a map created with Leaflet.
+
+Host your webpage on either GitHub Pages, RPubs, or NeoCities.
+
+Your webpage must contain the date that you created the document, and it must contain a map created with Leaflet. We would love to see you show off your creativity!
+
+## project
+The population density of 155 cities in Maryland of the U.S. was shown below. We get the data from https://simplemaps.com/data/us-cities
+
+## reading and cleaning the data
+```{r}
+data <- read.csv("E:/r/9.Developing Data Products/project1/uscitiesv1.5.csv")
+mddata <- data[which(data$state_id=="MD"),c(1,7,8,10,11)]
+#mddata <- mddata[complete.cases(mddata),]
+
+```
+
+
+```{r, echo=TRUE, message=FALSE}
+library(leaflet)
+md_cities <- data.frame(name = mddata$city,
+                        pop = mddata$population_proper,
+                        lat = mddata$lat,
+                        lng = mddata$lng)
+md_cities %>%
+  leaflet() %>%
+  addTiles() %>%
+  addCircles(weight = 2, radius = sqrt(mddata$density) * 30)
+```
